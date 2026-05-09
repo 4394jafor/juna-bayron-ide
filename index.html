@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ar" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Juna — Bayron IDE</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap">
+</head>
+<body>
+
+<!-- SPLASH SCREEN -->
+<div id="splash">
+  <div id="splash-content">
+    <div id="splash-logo">
+      <span class="s-j">J</span><span class="s-una">una</span>
+    </div>
+    <div id="splash-sub">Bayron Language IDE</div>
+    <div id="splash-author">by Mohammed Kamal Alsultany</div>
+    <div id="splash-bar"><div id="splash-fill"></div></div>
+    <div id="splash-msg">جاري التحميل...</div>
+  </div>
+</div>
+
+<!-- TOP BAR -->
+<div id="topbar">
+  <div id="logo-area">
+    <span class="logo-j">J</span><span class="logo-una">una</span>
+    <span class="logo-ver">v2.0</span>
+  </div>
+
+  <div id="menu-bar">
+    <div class="menu-group">
+      <div class="menu-btn" onclick="newFile()">+ جديد</div>
+      <div class="menu-btn" onclick="openFile()">📂 فتح</div>
+      <div class="menu-btn" onclick="saveFile()">💾 حفظ</div>
+      <div class="menu-btn" onclick="downloadFile()">⬇ تحميل</div>
+    </div>
+    <div class="menu-sep"></div>
+    <div class="menu-group">
+      <div class="menu-btn" id="btn-code" onclick="switchTab('code')" class="active">محرر</div>
+      <div class="menu-btn" id="btn-design" onclick="switchTab('design')">🎨 Design</div>
+      <div class="menu-btn" id="btn-preview" onclick="switchTab('preview')">👁 معاينة</div>
+    </div>
+    <div class="menu-sep"></div>
+    <div class="menu-group">
+      <div class="menu-btn" onclick="toggleTheme()">🌙 ثيم</div>
+      <div class="menu-btn" onclick="openSettings()">⚙ إعدادات</div>
+      <div class="menu-btn" onclick="openHelp()">❓ مساعدة</div>
+    </div>
+  </div>
+
+  <div id="topbar-right">
+    <div id="filename-display">untitled.bay</div>
+    <button id="run-btn" onclick="runCode()">
+      <span>▶</span> تشغيل
+    </button>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div id="workspace">
+
+  <!-- SIDEBAR -->
+  <div id="sidebar">
+    <div class="panel-title">📁 الملفات</div>
+    <div id="file-list">
+      <div class="file-entry active" onclick="selectFile(this, 'untitled.bay')">
+        <span class="file-icon">🔷</span> untitled.bay
+      </div>
+    </div>
+    <button class="side-btn" onclick="newFile()">+ ملف جديد</button>
+
+    <div class="panel-title" style="margin-top:16px">🧩 Snippets</div>
+    <div id="snippet-list">
+      <div class="snippet-item" onclick="insertSnippet('hello')">Hello World</div>
+      <div class="snippet-item" onclick="insertSnippet('func')">دالة</div>
+      <div class="snippet-item" onclick="insertSnippet('class')">كلاس</div>
+      <div class="snippet-item" onclick="insertSnippet('if')">إذا/وإلا</div>
+      <div class="snippet-item" onclick="insertSnippet('loop')">حلقة</div>
+      <div class="snippet-item" onclick="insertSnippet('try')">حاول/إلا</div>
+      <div class="snippet-item" onclick="insertSnippet('list')">قائمة</div>
+      <div class="snippet-item" onclick="insertSnippet('dict')">قاموس</div>
+    </div>
+
+    <div class="panel-title" style="margin-top:16px">📊 المتغيرات</div>
+    <div id="vars-panel"><div class="hint-text">شغّل الكود لعرض المتغيرات</div></div>
+  </div>
+
+  <!-- CODE TAB -->
+  <div id="tab-code" class="tab-panel active">
+    <div id="editor-container">
+      <div id="line-nums"></div>
+      <div id="editor-inner">
+        <textarea id="editor"
+          spellcheck="false"
+          autocomplete="off"
+          autocorrect="off"
+          autocapitalize="off"
+          placeholder="# اكتب كود Bayron هنا&#10;طباعة(&quot;مرحباً يا محمد!&quot;)"
+          oninput="onInput()"
+          onscroll="onScroll()"
+          onkeydown="onKeyDown(event)"
+          onclick="onCursorMove()"
+          onkeyup="onCursorMove()"></textarea>
+        <div id="highlight" aria-hidden="true"></div>
+      </div>
+    </div>
+    <!-- Autocomplete -->
+    <div id="autocomplete-box"></div>
+    <!-- Status bar -->
+    <div id="statusbar">
+      <span id="st-pos">سطر 1، عمود 1</span>
+      <span id="st-lang">🔷 Bayron</span>
+      <span id="st-encoding">UTF-8</span>
+      <span id="st-lines">0 سطر</span>
+      <span id="st-size">0 بايت</span>
+      <span id="st-author">Mohammed Kamal Alsultany</span>
+    </div>
+  </div>
+
+  <!-- DESIGN TAB -->
+  <div id="tab-design" class="tab-panel">
+    <div id="design-tools">
+      <div class="panel-title">🔧 العناصر</div>
+      <div id="elements-palette">
+        <div class="el-item" draggable="true" data-el="button" ondragstart="elDragStart(event)">🔲 زر</div>
+        <div class="el-item" draggable="true" data-el="label" ondragstart="elDragStart(event)">🏷 نص</div>
+        <div class="el-item" draggable="true" data-el="input" ondragstart="elDragStart(event)">✏ إدخال</div>
+        <div class="el-item" draggable="true" data-el="textarea" ondragstart="elDragStart(event)">📝 نص طويل</div>
+        <div class="el-item" draggable="true" data-el="image" ondragstart="elDragStart(event)">🖼 صورة</div>
+        <div class="el-item" draggable="true" data-el="checkbox" ondragstart="elDragStart(event)">☑ اختيار</div>
+        <div class="el-item" draggable="true" data-el="select" ondragstart="elDragStart(event)">📋 قائمة منسدلة</div>
+        <div class="el-item" draggable="true" data-el="progress" ondragstart="elDragStart(event)">📊 شريط تقدم</div>
+        <div class="el-item" draggable="true" data-el="divider" ondragstart="elDragStart(event)">➖ فاصل</div>
+        <div class="el-item" draggable="true" data-el="container" ondragstart="elDragStart(event)">📦 حاوية</div>
+      </div>
+      <div class="panel-title" style="margin-top:12px">🎨 الخصائص</div>
+      <div id="props-panel"><div class="hint-text">اختر عنصراً</div></div>
+      <div class="panel-title" style="margin-top:12px">⚡ الكود</div>
+      <div style="display:flex;gap:6px;padding:4px">
+        <button class="side-btn" onclick="sendCodeToEditor()" style="flex:1">→ للمحرر</button>
+        <button class="side-btn" onclick="copyGenCode()" style="flex:1">نسخ</button>
+      </div>
+    </div>
+    <div id="design-canvas"
+      ondragover="event.preventDefault()"
+      ondrop="elDrop(event)"
+      onclick="canvasClick(event)">
+      <div id="canvas-grid"></div>
+      <div class="canvas-empty">اسحب عناصر من اليسار وأفلتها هنا</div>
+    </div>
+    <div id="design-code-panel">
+      <div class="panel-title">كود Bayron المُولَّد</div>
+      <pre id="gen-code-view"># اسحب عناصر لتوليد الكود</pre>
+    </div>
+  </div>
+
+  <!-- PREVIEW TAB -->
+  <div id="tab-preview" class="tab-panel">
+    <div id="preview-area">
+      <div class="hint-text" style="margin:auto">شغّل الكود لعرض المعاينة</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- TERMINAL -->
+<div id="terminal-section">
+  <div id="terminal-header">
+    <div id="terminal-tabs">
+      <div class="t-tab active" onclick="switchTermTab('output')">المخرجات</div>
+      <div class="t-tab" onclick="switchTermTab('errors')">الأخطاء</div>
+      <div class="t-tab" onclick="switchTermTab('transpiled')">الكود المُحوَّل</div>
+    </div>
+    <div id="terminal-actions">
+      <button onclick="clearTerminal()">🗑 مسح</button>
+      <button onclick="copyTerminal()">📋 نسخ</button>
+      <button id="resize-term" onmousedown="startResizeTerm(event)">⬆</button>
+    </div>
+  </div>
+  <div id="terminal-body">
+    <div id="term-output" class="term-pane active"></div>
+    <div id="term-errors" class="term-pane"></div>
+    <div id="term-transpiled" class="term-pane"></div>
+  </div>
+</div>
+
+<!-- SETTINGS MODAL -->
+<div id="modal-settings" class="modal" style="display:none">
+  <div class="modal-box">
+    <div class="modal-title">⚙ إعدادات Juna</div>
+    <div class="setting-row">
+      <label>حجم الخط</label>
+      <input type="range" id="set-fontsize" min="12" max="26" value="15" oninput="liveFont(this.value)">
+      <span id="set-fontsize-val">15px</span>
+    </div>
+    <div class="setting-row">
+      <label>تبويب</label>
+      <select id="set-tabsize">
+        <option value="2">2 مسافات</option>
+        <option value="4" selected>4 مسافات</option>
+      </select>
+    </div>
+    <div class="setting-row">
+      <label>ترقيم الأسطر</label>
+      <input type="checkbox" id="set-linenums" checked onchange="toggleLineNums()">
+    </div>
+    <div class="setting-row">
+      <label>إكمال تلقائي</label>
+      <input type="checkbox" id="set-autocomplete" checked>
+    </div>
+    <div class="setting-row">
+      <label>مسار bayron.py</label>
+      <input type="text" id="set-bayron-path" placeholder="للتشغيل المحلي (اختياري)">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-primary" onclick="saveSettings()">حفظ</button>
+      <button class="btn-secondary" onclick="closeModal('modal-settings')">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<!-- HELP MODAL -->
+<div id="modal-help" class="modal" style="display:none">
+  <div class="modal-box" style="max-width:600px">
+    <div class="modal-title">❓ مساعدة Juna</div>
+    <div class="help-content">
+      <h3>اختصارات لوحة المفاتيح</h3>
+      <table class="help-table">
+        <tr><td>Ctrl+S</td><td>حفظ الملف</td></tr>
+        <tr><td>F5</td><td>تشغيل الكود</td></tr>
+        <tr><td>Ctrl+Z</td><td>تراجع</td></tr>
+        <tr><td>Ctrl+/</td><td>تعليق السطر</td></tr>
+        <tr><td>Tab</td><td>مسافة بادئة</td></tr>
+        <tr><td>Ctrl+D</td><td>تكرار السطر</td></tr>
+        <tr><td>Ctrl+F</td><td>بحث</td></tr>
+      </table>
+      <h3 style="margin-top:16px">أمثلة Bayron</h3>
+      <pre class="help-code">طباعة("مرحباً!")
+اسم = مدخل("ما اسمك؟ ")
+إذا اسم == "محمد":
+    طباعة("أهلاً يا مخترع Bayron!")
+وإلا:
+    طباعة("أهلاً " + اسم)</pre>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-primary" onclick="closeModal('modal-help')">إغلاق</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/keywords.js"></script>
+<script src="js/highlighter.js"></script>
+<script src="js/design.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

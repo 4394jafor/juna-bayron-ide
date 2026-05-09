@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="ar" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Juna — تسجيل الدخول</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background: #0a0e17;
+  color: #e6edf3;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* Animated background */
+.bg-anim {
+  position: fixed; inset: 0; z-index: 0;
+  background: radial-gradient(ellipse at 20% 50%, rgba(88,166,255,0.08) 0%, transparent 60%),
+              radial-gradient(ellipse at 80% 20%, rgba(255,215,0,0.06) 0%, transparent 50%),
+              radial-gradient(ellipse at 60% 80%, rgba(188,140,255,0.06) 0%, transparent 50%);
+}
+
+.card {
+  position: relative; z-index: 1;
+  background: rgba(22,27,34,0.95);
+  border: 1px solid #30363d;
+  border-radius: 20px;
+  padding: 48px 40px;
+  width: 420px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.05);
+  backdrop-filter: blur(20px);
+  text-align: center;
+}
+
+.logo { margin-bottom: 8px; }
+.logo-j { font-size: 52px; font-weight: 900; color: #ffd700; text-shadow: 0 0 30px rgba(255,215,0,0.5); }
+.logo-una { font-size: 48px; font-weight: 900; color: #58a6ff; }
+.logo-sub { font-size: 12px; color: #6e7681; letter-spacing: 3px; text-transform: uppercase; margin-top: 4px; }
+.logo-author { font-size: 11px; color: #444d56; margin-top: 4px; }
+
+.divider { width: 60px; height: 2px; background: linear-gradient(90deg, #ffd700, #58a6ff); margin: 24px auto; border-radius: 2px; }
+
+.welcome { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+.welcome-sub { font-size: 13px; color: #8b949e; margin-bottom: 32px; }
+
+/* Google Button */
+.btn-google {
+  display: flex; align-items: center; justify-content: center; gap: 12px;
+  width: 100%;
+  background: #fff;
+  color: #1f1f1f;
+  border: none; border-radius: 10px;
+  padding: 13px 20px;
+  font-size: 15px; font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  margin-bottom: 16px;
+}
+.btn-google:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.4); }
+.btn-google:active { transform: translateY(0); }
+.btn-google svg { width: 20px; height: 20px; }
+
+/* Email form */
+.tab-bar { display: flex; gap: 4px; margin-bottom: 20px; }
+.tab-btn {
+  flex: 1; padding: 8px; border-radius: 8px; cursor: pointer;
+  font-size: 13px; border: 1px solid #30363d; background: #21262d;
+  color: #8b949e; transition: 0.15s;
+}
+.tab-btn.active { background: #58a6ff22; border-color: #58a6ff; color: #58a6ff; }
+
+.form-group { margin-bottom: 14px; text-align: left; }
+.form-group label { display: block; font-size: 12px; color: #8b949e; margin-bottom: 5px; }
+.form-group input {
+  width: 100%; padding: 10px 14px;
+  background: #21262d; border: 1px solid #30363d;
+  border-radius: 8px; color: #e6edf3; font-size: 14px;
+  transition: 0.15s; outline: none;
+}
+.form-group input:focus { border-color: #58a6ff; box-shadow: 0 0 0 3px rgba(88,166,255,0.15); }
+
+.btn-primary {
+  width: 100%; padding: 12px;
+  background: linear-gradient(135deg, #1f6a2a, #2ea043);
+  color: #fff; border: none; border-radius: 10px;
+  font-size: 15px; font-weight: 700; cursor: pointer;
+  transition: 0.2s; margin-top: 4px;
+  box-shadow: 0 4px 15px rgba(46,160,67,0.3);
+}
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(46,160,67,0.4); }
+
+.or-sep { display: flex; align-items: center; gap: 10px; margin: 16px 0; color: #444d56; font-size: 12px; }
+.or-sep::before, .or-sep::after { content:''; flex:1; height:1px; background:#30363d; }
+
+.footer-text { font-size: 11px; color: #444d56; margin-top: 24px; }
+.footer-text a { color: #58a6ff; text-decoration: none; }
+
+/* User profile (after login) */
+#user-panel { display: none; text-align: center; }
+.user-avatar { width: 72px; height: 72px; border-radius: 50%; border: 3px solid #ffd700; margin: 0 auto 12px; display: block; }
+.user-name { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+.user-email { font-size: 13px; color: #8b949e; margin-bottom: 24px; }
+.btn-open {
+  width: 100%; padding: 13px;
+  background: linear-gradient(135deg, #1a237e, #58a6ff);
+  color: #fff; border: none; border-radius: 10px;
+  font-size: 15px; font-weight: 700; cursor: pointer;
+  transition: 0.2s; margin-bottom: 10px;
+  box-shadow: 0 4px 15px rgba(88,166,255,0.3);
+}
+.btn-open:hover { transform: translateY(-1px); }
+.btn-signout {
+  width: 100%; padding: 10px;
+  background: transparent; border: 1px solid #30363d;
+  color: #8b949e; border-radius: 10px; font-size: 13px;
+  cursor: pointer; transition: 0.15s;
+}
+.btn-signout:hover { border-color: #f85149; color: #f85149; }
+
+#msg { font-size: 13px; color: #f85149; margin-top: 12px; min-height: 20px; }
+#loading { display: none; color: #8b949e; font-size: 13px; margin-top: 12px; }
+
+#auth-panel {}
+</style>
+</head>
+<body>
+<div class="bg-anim"></div>
+
+<div class="card">
+  <div class="logo">
+    <span class="logo-j">J</span><span class="logo-una">una</span>
+    <div class="logo-sub">Bayron IDE</div>
+    <div class="logo-author">by Mohammed Kamal Alsultany</div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- AUTH PANEL -->
+  <div id="auth-panel">
+    <div class="welcome">أهلاً بك!</div>
+    <div class="welcome-sub">سجّل دخولك للوصول إلى Juna</div>
+
+    <!-- Google -->
+    <button class="btn-google" onclick="signInGoogle()">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+      </svg>
+      تسجيل الدخول بـ Google
+    </button>
+
+    <div class="or-sep">أو</div>
+
+    <!-- Tabs -->
+    <div class="tab-bar">
+      <button class="tab-btn active" id="tab-login" onclick="showTab('login')">دخول</button>
+      <button class="tab-btn" id="tab-register" onclick="showTab('register')">حساب جديد</button>
+    </div>
+
+    <!-- Login Form -->
+    <div id="form-login">
+      <div class="form-group">
+        <label>البريد الإلكتروني</label>
+        <input type="email" id="login-email" placeholder="example@gmail.com">
+      </div>
+      <div class="form-group">
+        <label>كلمة المرور</label>
+        <input type="password" id="login-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')emailLogin()">
+      </div>
+      <button class="btn-primary" onclick="emailLogin()">دخول</button>
+    </div>
+
+    <!-- Register Form -->
+    <div id="form-register" style="display:none">
+      <div class="form-group">
+        <label>الاسم</label>
+        <input type="text" id="reg-name" placeholder="محمد كمال">
+      </div>
+      <div class="form-group">
+        <label>البريد الإلكتروني</label>
+        <input type="email" id="reg-email" placeholder="example@gmail.com">
+      </div>
+      <div class="form-group">
+        <label>كلمة المرور</label>
+        <input type="password" id="reg-pass" placeholder="6 أحرف على الأقل" onkeydown="if(event.key==='Enter')emailRegister()">
+      </div>
+      <button class="btn-primary" onclick="emailRegister()">إنشاء حساب</button>
+    </div>
+
+    <div id="msg"></div>
+    <div id="loading">⏳ جاري تسجيل الدخول...</div>
+  </div>
+
+  <!-- USER PANEL (after login) -->
+  <div id="user-panel">
+    <img id="user-avatar" class="user-avatar" src="" alt="">
+    <div class="user-name" id="user-name"></div>
+    <div class="user-email" id="user-email-disp"></div>
+    <button class="btn-open" onclick="openJuna()">🚀 فتح Juna IDE</button>
+    <button class="btn-signout" onclick="signOut()">تسجيل الخروج</button>
+  </div>
+
+  <div class="footer-text">
+    بإنشاء حساب، أنت توافق على<br>
+    شروط الاستخدام الخاصة بـ <a href="#">Juna Bayron IDE</a>
+  </div>
+</div>
+
+<!-- Firebase -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut as fbSignOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBYXQKoe3QUXbexrXmr1j829VpBwSVZExQ",
+  authDomain: "juna-bayron.firebaseapp.com",
+  projectId: "juna-bayron",
+  storageBucket: "juna-bayron.firebasestorage.app",
+  messagingSenderId: "428972828575",
+  appId: "1:428972828575:web:d28812ef723e899b3f7faa",
+  measurementId: "G-R6JXWNSML9"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const provider = new GoogleAuthProvider();
+
+function showMsg(txt, color='#f85149') {
+  const m = document.getElementById('msg');
+  m.textContent = txt;
+  m.style.color = color;
+}
+
+function setLoading(v) {
+  document.getElementById('loading').style.display = v ? 'block' : 'none';
+}
+
+async function saveUser(user) {
+  await setDoc(doc(db, 'users', user.uid), {
+    name: user.displayName || '',
+    email: user.email,
+    photo: user.photoURL || '',
+    lastLogin: new Date().toISOString(),
+    createdAt: new Date().toISOString(),
+  }, { merge: true });
+}
+
+function showUserPanel(user) {
+  document.getElementById('auth-panel').style.display = 'none';
+  document.getElementById('user-panel').style.display = 'block';
+  document.getElementById('user-name').textContent = user.displayName || user.email;
+  document.getElementById('user-email-disp').textContent = user.email;
+  const avatar = document.getElementById('user-avatar');
+  if (user.photoURL) { avatar.src = user.photoURL; avatar.style.display = 'block'; }
+  else { avatar.style.display = 'none'; }
+}
+
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    showUserPanel(user);
+    localStorage.setItem('juna-user', JSON.stringify({ uid: user.uid, name: user.displayName, email: user.email, photo: user.photoURL }));
+  }
+});
+
+window.signInGoogle = async () => {
+  setLoading(true); showMsg('');
+  try {
+    const result = await signInWithPopup(auth, provider);
+    await saveUser(result.user);
+    showUserPanel(result.user);
+  } catch(e) {
+    showMsg('خطأ: ' + (e.code === 'auth/popup-closed-by-user' ? 'تم إغلاق النافذة' : e.message));
+  }
+  setLoading(false);
+};
+
+window.emailLogin = async () => {
+  const email = document.getElementById('login-email').value;
+  const pass = document.getElementById('login-pass').value;
+  if (!email || !pass) { showMsg('أدخل البريد وكلمة المرور'); return; }
+  setLoading(true); showMsg('');
+  try {
+    const r = await signInWithEmailAndPassword(auth, email, pass);
+    await saveUser(r.user);
+    showUserPanel(r.user);
+  } catch(e) {
+    const msgs = { 'auth/wrong-password':'كلمة المرور غلط', 'auth/user-not-found':'البريد غير موجود', 'auth/invalid-email':'البريد غير صحيح' };
+    showMsg(msgs[e.code] || 'خطأ في تسجيل الدخول');
+  }
+  setLoading(false);
+};
+
+window.emailRegister = async () => {
+  const name = document.getElementById('reg-name').value;
+  const email = document.getElementById('reg-email').value;
+  const pass = document.getElementById('reg-pass').value;
+  if (!name || !email || !pass) { showMsg('أكمل جميع الحقول'); return; }
+  if (pass.length < 6) { showMsg('كلمة المرور 6 أحرف على الأقل'); return; }
+  setLoading(true); showMsg('');
+  try {
+    const r = await createUserWithEmailAndPassword(auth, email, pass);
+    await updateProfile(r.user, { displayName: name });
+    await saveUser(r.user);
+    showMsg('✓ تم إنشاء الحساب بنجاح!', '#3fb950');
+    showUserPanel(r.user);
+  } catch(e) {
+    const msgs = { 'auth/email-already-in-use':'البريد مستخدم بالفعل', 'auth/invalid-email':'البريد غير صحيح', 'auth/weak-password':'كلمة المرور ضعيفة جداً' };
+    showMsg(msgs[e.code] || 'خطأ في إنشاء الحساب');
+  }
+  setLoading(false);
+};
+
+window.signOut = async () => {
+  await fbSignOut(auth);
+  localStorage.removeItem('juna-user');
+  document.getElementById('auth-panel').style.display = 'block';
+  document.getElementById('user-panel').style.display = 'none';
+  showMsg('');
+};
+
+window.openJuna = () => {
+  window.location.href = 'index.html';
+};
+</script>
+
+<script>
+function showTab(tab) {
+  document.getElementById('form-login').style.display = tab === 'login' ? 'block' : 'none';
+  document.getElementById('form-register').style.display = tab === 'register' ? 'block' : 'none';
+  document.getElementById('tab-login').classList.toggle('active', tab === 'login');
+  document.getElementById('tab-register').classList.toggle('active', tab === 'register');
+  document.getElementById('msg').textContent = '';
+}
+</script>
+</body>
+</html>
