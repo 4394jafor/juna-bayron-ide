@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://4394jafor.github.io/juna-bayron-ide/sitemap.xml
